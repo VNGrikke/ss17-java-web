@@ -3,58 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý đơn hàng</title>
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="flex h-screen bg-gray-100">
-<div class="bg-gray-100 min-h-screen p-6">
+<body>
+<div>
     <div th:replace="fragments/layout :: body"></div>
 </div>
-<div class="max-w-7xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-6">📦 Quản lý đơn hàng</h1>
+<div>
+    <h1>Quản lý đơn hàng</h1>
 
     <!-- Form lọc -->
-    <form th:action="@{/admin/orders}" method="get" class="grid grid-cols-5 gap-4 mb-6">
-        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm theo tên" class="col-span-1 px-3 py-2 rounded border" />
+    <form th:action="@{/admin/orders}" method="get">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm theo tên"/>
 
-        <select name="status" class="col-span-1 px-3 py-2 rounded border">
+        <select name="status">
             <option value="">-- Trạng thái --</option>
             <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ xác nhận</option>
             <option value="CONFIRMED" th:selected="${status == 'CONFIRMED'}">Đã xác nhận</option>
             <option value="CANCELLED" th:selected="${status == 'CANCELLED'}">Đã hủy</option>
         </select>
 
-        <input type="date" name="from" th:value="${from}" class="col-span-1 px-3 py-2 rounded border"/>
-        <input type="date" name="to" th:value="${to}" class="col-span-1 px-3 py-2 rounded border"/>
+        <input type="date" name="from" th:value="${from}"/>
+        <input type="date" name="to" th:value="${to}"/>
 
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">🔍 Lọc</button>
+        <button type="submit">Lọc</button>
     </form>
 
     <!-- Bảng danh sách -->
-    <div class="overflow-x-auto bg-white rounded shadow">
-        <table class="min-w-full table-auto text-sm">
-            <thead class="bg-gray-200">
+    <div>
+        <table>
+            <thead>
             <tr>
-                <th class="py-2 px-4 border">#</th>
-                <th class="py-2 px-4 border">Khách hàng</th>
-                <th class="py-2 px-4 border">SĐT</th>
-                <th class="py-2 px-4 border">Địa chỉ</th>
-                <th class="py-2 px-4 border">Ngày đặt</th>
-                <th class="py-2 px-4 border">Trạng thái</th>
-                <th class="py-2 px-4 border">Hành động</th>
+                <th>#</th>
+                <th>Khách hàng</th>
+                <th>SĐT</th>
+                <th>Địa chỉ</th>
+                <th>Ngày đặt</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="order, iterStat : ${orders}">
-                <td class="py-2 px-4 border" th:text="${(currentPage - 1) * pageSize + iterStat.index + 1}"></td>
-                <td class="py-2 px-4 border" th:text="${order.recipientName}"></td>
-                <td class="py-2 px-4 border" th:text="${order.phone}"></td>
-                <td class="py-2 px-4 border" th:text="${order.address}"></td>
-                <td class="py-2 px-4 border" th:text="${order.orderDate}"></td>
-                <td class="py-2 px-4 border" th:text="${order.status}"></td>
-                <td class="py-2 px-4 border flex gap-2">
-                    <a th:href="@{/admin/orders/view/{id}(id=${order.id})}" class="bg-blue-500 text-white px-2 py-1 rounded">👁️</a>
-                    <a th:href="@{/admin/orders/confirm/{id}(id=${order.id})}" class="bg-green-500 text-white px-2 py-1 rounded" th:if="${order.status.name() == 'PENDING'}">✅</a>
-                    <a th:href="@{/admin/orders/cancel/{id}(id=${order.id})}" class="bg-red-500 text-white px-2 py-1 rounded" th:if="${order.status.name() == 'PENDING'}">❌</a>
+                <td th:text="${(currentPage - 1) * pageSize + iterStat.index + 1}"></td>
+                <td th:text="${order.recipientName}"></td>
+                <td th:text="${order.phone}"></td>
+                <td th:text="${order.address}"></td>
+                <td th:text="${order.orderDate}"></td>
+                <td th:text="${order.status}"></td>
+                <td>
+                    <a th:href="@{/admin/orders/view/{id}(id=${order.id})}">👁️</a>
+                    <a th:href="@{/admin/orders/confirm/{id}(id=${order.id})}"
+                       th:if="${order.status.name() == 'PENDING'}">✅</a>
+                    <a th:href="@{/admin/orders/cancel/{id}(id=${order.id})}"
+                       th:if="${order.status.name() == 'PENDING'}">❌</a>
                 </td>
             </tr>
             </tbody>
@@ -62,19 +63,17 @@
     </div>
 
     <!-- Phân trang -->
-    <div class="mt-6 flex justify-center">
-        <ul class="flex gap-2">
+    <div>
+        <ul>
             <li th:if="${currentPage > 1}">
-                <a th:href="@{/admin/orders(page=${currentPage - 1})}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">«</a>
+                <a th:href="@{/admin/orders(page=${currentPage - 1})}">«</a>
             </li>
             <li th:each="i : ${#numbers.sequence(1, totalPages)}">
                 <a th:href="@{/admin/orders(page=${i})}"
-                   th:text="${i}"
-                   th:classappend="${i == currentPage} ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black'"
-                   class="px-3 py-1 rounded hover:bg-blue-400"></a>
+                   th:text="${i}"></a>
             </li>
             <li th:if="${currentPage < totalPages}">
-                <a th:href="@{/admin/orders(page=${currentPage + 1})}" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">»</a>
+                <a th:href="@{/admin/orders(page=${currentPage + 1})}">»</a>
             </li>
         </ul>
     </div>

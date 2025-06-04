@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title th:text="${product.productName}">Chi tiết sản phẩm</title>
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-6">
+<body>
 
-<div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-8">
-    <h2 class="text-3xl font-bold mb-6 text-indigo-700" th:text="${product.productName}">Tên sản phẩm</h2>
+<div>
+    <h2 th:text="${product.productName}">Tên sản phẩm</h2>
 
-    <div class="flex flex-col md:flex-row gap-8">
+    <div>
         <img
                 th:src="@{${product.image}}"
                 alt="ảnh sản phẩm"
-                class="w-full md:w-1/2 rounded object-cover max-h-96"
         />
 
-        <div class="flex flex-col justify-between md:w-1/2">
-            <p class="text-gray-700 mb-4" th:text="${product.description}">Mô tả sản phẩm</p>
+        <div>
+            <p th:text="${product.description}">Mô tả sản phẩm</p>
 
-            <p class="text-xl font-semibold text-indigo-600 mb-2">
+            <p>
                 Giá: <span th:text="${product.price}"></span>
             </p>
 
-            <p class="text-lg text-gray-600 mb-6">
+            <p>
                 Còn lại: <span th:text="${product.stock}"></span>
             </p>
             <form th:action="@{/cart/add/{productId}(productId=${product.id})}" method="post" style="display: inline;">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
+                <button type="submit">
                     Mua
                 </button>
             </form>
-            <a href="/home" class="inline-block self-start px-5 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
+            <a href="/home">
                 Quay lại
             </a>
         </div>

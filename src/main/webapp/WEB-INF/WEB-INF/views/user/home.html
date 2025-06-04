@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Trang Chủ</title>
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 min-h-screen p-6">
-<div class="flex items-center justify-between max-w-6xl mx-auto mb-10">
-    <h2 class="text-4xl font-bold text-center text-indigo-600 mb-10">Danh sách sản phẩm</h2>
-    <a href="cart/view" class="inline-block mt-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Giỏ hàng của bạn</a>
+<body>
+<div>
+    <h2>Danh sách sản phẩm</h2>
+    <a href="cart/view">Giỏ hàng của bạn</a>
 </div>
-<div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-    <div th:each="product : ${products}" class="bg-white p-5 rounded-lg shadow hover:shadow-lg transition">
-        <img th:src="@{${product.image}}" alt="ảnh" class="w-full h-48 object-cover rounded" />
-        <h3 class="mt-4 text-xl font-semibold text-gray-800" th:text="${product.productName}"></h3>
-        <p class="mt-2 text-gray-600 text-sm" th:text="${product.description}"></p>
-        <p class="mt-3 font-bold text-indigo-700 text-lg">
+<div>
+    <div th:each="product : ${products}">
+        <img th:src="@{${product.image}}" alt="ảnh"/>
+        <h3 th:text="${product.productName}"></h3>
+        <p th:text="${product.description}"></p>
+        <p>
             Giá: <span th:text="${product.price}"></span>
         </p>
         <a
                 th:href="@{/product/{id}(id=${product.id})}"
-                class="inline-block mt-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
         >
             Chi tiết
         </a>
@@ -28,21 +26,19 @@
 </div>
 
 <!-- Pagination -->
-<div class="max-w-6xl mx-auto mt-12 flex justify-center">
-    <ul class="flex list-none gap-3">
+<div>
+    <ul>
         <li th:if="${currentPage > 1}">
             <a
                     th:href="@{/home(page=${currentPage - 1})}"
-                    class="px-3 py-1 rounded bg-indigo-100 text-indigo-600 hover:bg-indigo-200"
             >
                 «
             </a>
         </li>
 
-        <li th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'">
+        <li th:each="i : ${#numbers.sequence(1, totalPages)}">
             <a
                     th:href="@{/home(page=${i})}"
-                    class="px-4 py-1 rounded hover:bg-indigo-300 transition"
                     th:text="${i}"
             >
                 1
@@ -52,7 +48,6 @@
         <li th:if="${currentPage < totalPages}">
             <a
                     th:href="@{/home(page=${currentPage + 1})}"
-                    class="px-3 py-1 rounded bg-indigo-100 text-indigo-600 hover:bg-indigo-200"
             >
                 »
             </a>
