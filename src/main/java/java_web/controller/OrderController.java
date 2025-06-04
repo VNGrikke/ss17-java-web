@@ -1,8 +1,8 @@
-package java_web.controller;
+    package java_web.controller;
 
     import java_web.entity.*;
-    import java_web.service.CartService;
-    import java_web.service.OrderService;
+    import java_web.repository.CartRepository;
+    import java_web.repository.OrderRepository;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Controller;
     import org.springframework.ui.Model;
@@ -18,10 +18,10 @@ package java_web.controller;
     public class OrderController {
 
         @Autowired
-        private CartService cartService;
+        private CartRepository cartRepo;
 
         @Autowired
-        private OrderService orderService;
+        private OrderRepository orderRepo;
 
         @GetMapping("/checkout")
         public String showCheckoutForm(HttpSession session, Model model) {
@@ -29,10 +29,10 @@ package java_web.controller;
             if (customer == null)
                 return "redirect:/auth/login";
 
-            Cart cart = cartService.findByCustomerId(customer.getId());
+            Cart cart = cartRepo.findByCustomerId(customer.getId());
             if (cart == null || cart.getItems().isEmpty()) {
                 model.addAttribute("message", "Giỏ hàng của bạn đang trống!");
-                return "home";
+                return "user/home";
             }
 
             model.addAttribute("cartItems", cart.getItems());
@@ -42,7 +42,7 @@ package java_web.controller;
                     .sum();
             model.addAttribute("total", total);
 
-            return "checkout";
+            return "user/checkout";
         }
 
 
@@ -57,7 +57,7 @@ package java_web.controller;
             if (customer == null)
                 return "redirect:/auth/login";
 
-            Cart cart = cartService.findByCustomerId(customer.getId());
+            Cart cart = cartRepo.findByCustomerId(customer.getId());
             if (cart == null || cart.getItems().isEmpty())
                 return "redirect:/cart/view";
 
@@ -80,10 +80,10 @@ package java_web.controller;
             }
             order.setOrderDetails(details);
 
-            orderService.save(order);
+            orderRepo.save(order);
 
             cart.getItems().clear();
-            cartService.update(cart);
+            cartRepo.update(cart);
 
             model.addAttribute("message", "Đặt hàng thành công!");
             return "redirect:/home";

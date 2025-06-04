@@ -27,6 +27,9 @@ public class Order {
     @ManyToOne
     private Customer customer;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 }

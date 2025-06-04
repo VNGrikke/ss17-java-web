@@ -1,7 +1,7 @@
 package java_web.controller;
 
 import java_web.entity.Customer;
-import java_web.service.CustomerService;
+import java_web.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,61 +15,55 @@ import javax.validation.Valid;
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
-    private CustomerService customersevice;
+    private CustomerRepository customerRepo;
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("customer", new Customer());
-        return "register";
+        return "user/register";
     }
 
     @PostMapping("/register")
     public String processRegister(@ModelAttribute("customer") @Valid Customer customer,
                                   BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "register";
+            return "user/register";
         }
 
-        if (customersevice.findByUsername(customer.getUsername()) != null) {
-            return "register";
+        if (customerRepo.findByUsername(customer.getUsername()) != null) {
+            return "user/register";
         }
 
-        customersevice.save(customer);
+        customerRepo.save(customer);
         return "redirect:login";
     }
 
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("customer", new Customer());
-        return "login";
+        return "user/login";
     }
-
-    @GetMapping("/admin_home")
-    public String showAdminHome(Model model){
-        return "admin_home";
-    }
-
 
     @PostMapping("/login")
     public String processLogin(@ModelAttribute("customer") Customer customer,
                                HttpSession session, Model model) {
-        Customer found = customersevice.login(customer.getUsername(), customer.getPassword());
+        Customer found = customerRepo.login(customer.getUsername(), customer.getPassword());
 
         if (found == null) {
-            return "login";
+            return "user/login";
         }
 
         if (!found.isStatus()) {
-            return "login";
+            return "user/login";
         }
 
         session.setAttribute("currentUser", found);
 
         if ("ADMIN".equalsIgnoreCase(found.getRole())) {
-            return "admin_home";
+            return "redirect:/admin/dashboard";
         } else {
             model.addAttribute("customer", found);
-            return  "redirect:/home";
+            return "redirect:/home";
         }
     }
 

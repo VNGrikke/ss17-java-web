@@ -4,9 +4,8 @@ import java_web.entity.Cart;
 import java_web.entity.CartItem;
 import java_web.entity.Customer;
 import java_web.entity.Product;
+import java_web.repository.CartRepository;
 import java_web.repository.ProductRepository;
-import java_web.service.CartService;
-import java_web.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,10 +21,10 @@ import javax.servlet.http.HttpSession;
 public class CartController {
 
     @Autowired
-    private CartService cartService;
+    private CartRepository cartRepo;
 
     @Autowired
-    private ProductService productService;
+    private ProductRepository productRepo;
 
     @PostMapping("/add/{productId}")
     public String addToCart(@PathVariable int productId, HttpSession session, Model model) {
@@ -33,21 +32,21 @@ public class CartController {
         if (customer == null)
             return "redirect:/auth/login";
 
-        Cart cart = cartService.findByCustomerId(customer.getId());
+        Cart cart = cartRepo.findByCustomerId(customer.getId());
         if (cart == null) {
             cart = new Cart();
             cart.setCustomer(customer);
-            cartService.save(cart);
+            cartRepo.save(cart);
         }
 
-        Product product = productService.findById((long) productId);
+        Product product = productRepo.findById((long) productId);
         CartItem item = new CartItem();
         item.setCart(cart);
         item.setProduct(product);
         item.setQuantity(1);
 
         cart.getItems().add(item);
-        cartService.update(cart);
+        cartRepo.update(cart);
         model.addAttribute("message", "Product added to cart successfully!");
         return "redirect:/home";
     }
@@ -58,10 +57,10 @@ public class CartController {
         if (customer == null)
             return "redirect:/auth/login";
 
-        Cart cart = cartService.findByCustomerId(customer.getId());
+        Cart cart = cartRepo.findByCustomerId(customer.getId());
         if (cart == null || cart.getItems().isEmpty()) {
             model.addAttribute("message", "Giỏ hàng của bạn đang trống.");
-            return "cart";
+            return "user/cart";
         }
 
 
@@ -69,13 +68,13 @@ public class CartController {
 
         double total = cart.getItems().stream()
                 .mapToDouble(item -> {
-                    Product product = productService.findById((long) item.getProduct().getId());
+                    Product product = productRepo.findById((long) item.getProduct().getId());
                     return product.getPrice() * item.getQuantity();
                 })
                 .sum();
         model.addAttribute("total", total);
 
-        return "cart";
+        return "user/cart";
     }
 
     @PostMapping("/remove/{itemId}")
@@ -84,8 +83,8 @@ public class CartController {
         if (customer == null)
             return "redirect:/auth/login";
 
-        Cart cart = cartService.findByCustomerId(customer.getId());
-        cartService.delete(cart, itemId);
+        Cart cart = cartRepo.findByCustomerId(customer.getId());
+        cartRepo.delete(cart, itemId);
 
         return "redirect:/cart/view";
     }

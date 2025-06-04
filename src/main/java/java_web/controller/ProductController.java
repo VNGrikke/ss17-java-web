@@ -2,7 +2,7 @@ package java_web.controller;
 
 import java_web.entity.Customer;
 import java_web.entity.Product;
-import java_web.service.ProductService;
+import java_web.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class HomeController {
+public class ProductController {
     @Autowired
-    private ProductService productService;
+    private ProductRepository productRepo;
 
     @GetMapping("/home")
     public String showHome(
@@ -25,14 +25,14 @@ public class HomeController {
             return "redirect:/auth/login";
 
         int size = 5;
-        long totalItems = productService.countProducts();
+        long totalItems = productRepo.count();
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
-        model.addAttribute("products", productService.findProducts(page, size));
+        model.addAttribute("products", productRepo.findProducts(page, size));
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
 
-        return "home";
+        return "user/home";
     }
 
 
@@ -42,11 +42,11 @@ public class HomeController {
         if (customer == null)
             return "redirect:/auth/login";
 
-        Product product = productService.findById(id);
+        Product product = productRepo.findById(id);
         if (product == null) {
             return "redirect:/home";
         }
         model.addAttribute("product", product);
-        return "product_detail";
+        return "user/product_detail";
     }
 }

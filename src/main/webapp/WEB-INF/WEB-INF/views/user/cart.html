@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+<div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-2xl font-bold mb-4">Giỏ hàng của bạn</h2>
+
+    <p th:if="${message}" th:text="${message}" class="text-gray-500"></p>
+
+    <div th:if="${cartItems}">
+        <table class="w-full border">
+            <thead class="bg-gray-200">
+            <tr>
+                <th class="p-2">Tên sản phẩm</th>
+                <th class="p-2">Giá</th>
+                <th class="p-2">Số lượng</th>
+                <th class="p-2">Thành tiền</th>
+                <th class="p-2">Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cartItems}" class="border-t">
+                <td class="p-2" th:text="${item.product.productName}"></td>
+                <td class="p-2" th:text="${item.product.price}"></td>
+                <td class="p-2" th:text="${item.quantity}"></td>
+                <td class="p-2" th:text="${item.product.price * item.quantity}"></td>
+                <td class="p-2">
+                    <form th:action="@{/cart/remove/{id}(id=${item.id})}" method="post">
+                        <button class="text-red-600 hover:underline">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="text-right font-bold mt-4">
+            Tổng tiền: <span th:text="${total}"></span>
+        </div>
+        <div class="mt-6">
+            <form th:action="@{/order/checkout}" method="get">
+                <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Thanh toán</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

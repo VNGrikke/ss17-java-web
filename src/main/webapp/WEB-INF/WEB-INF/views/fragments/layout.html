@@ -1,0 +1,12 @@
+<body th:fragment="layout">
+<!-- Sidebar -->
+<aside class="w-64 bg-white shadow-md p-4">
+    <h2 class="text-xl font-bold mb-6">Admin Panel</h2>
+    <ul class="space-y-4">
+        <li><a class="block hover:text-blue-600" th:href="@{/admin/dashboard}">📊 Dashboard</a></li>
+        <li><a class="block hover:text-blue-600" th:href="@{/admin/users}">👤 Quản lý người dùng</a></li>
+        <li><a class="block hover:text-blue-600" th:href="@{/admin/products}">📦 Quản lý sản phẩm</a></li>
+        <li><a class="block hover:text-blue-600" th:href="@{/admin/orders}">🧾 Quản lý đơn hàng</a></li>
+    </ul>
+</aside>
+</body>

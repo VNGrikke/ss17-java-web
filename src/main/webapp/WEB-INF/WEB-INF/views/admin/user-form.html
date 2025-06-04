@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sửa thông tin người dùng</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+<h2 class="text-2xl font-semibold mb-4">Chỉnh sửa người dùng</h2>
+
+<form th:action="@{/admin/users/edit}" method="post" th:object="${customer}" class="space-y-4">
+    <input type="hidden" th:field="*{id}"/>
+
+    <div>
+        <label>Tên đăng nhập:</label>
+        <input type="text" th:field="*{username}" class="border rounded px-4 py-2 w-full" required/>
+    </div>
+
+    <div>
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" class="border rounded px-4 py-2 w-full" required/>
+    </div>
+
+    <div>
+        <label>Số điện thoại:</label>
+        <input type="text" th:field="*{phoneNumber}" class="border rounded px-4 py-2 w-full" required/>
+    </div>
+
+    <div>
+        <label>Vai trò:</label>
+        <select th:field="*{role}" class="border rounded px-4 py-2 w-full">
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+        </select>
+    </div>
+
+    <div class="flex space-x-4">
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Lưu</button>
+        <a th:href="@{/admin/users}" class="bg-gray-400 text-white px-4 py-2 rounded">Quay lại</a>
+    </div>
+</form>
+</body>
+</html>

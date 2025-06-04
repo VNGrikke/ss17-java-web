@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán</title>
+</head>
+<body>
+<h2>🛒 Xác nhận đơn hàng</h2>
+
+<div th:if="${cartItems != null}">
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${cartItems}">
+            <td th:text="${item.product.productName}"></td>
+            <td th:text="${item.product.price}"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${item.product.price * item.quantity}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p><strong>Tổng tiền: </strong> <span th:text="${total}"></span> VNĐ</p>
+
+    <form method="post" th:action="@{/order/checkout}">
+        <label>Họ tên người nhận:</label>
+        <input type="text" name="recipientName" required><br>
+
+        <label>Địa chỉ giao hàng:</label>
+        <input type="text" name="address" required><br>
+
+        <label>Số điện thoại:</label>
+        <input type="text" name="phone" required><br>
+
+        <button type="submit">✅ Đặt hàng</button>
+    </form>
+</div>
+
+</body>
+</html>
